@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f1e4">
+  <meta name="description" content="Gather is your event-planning workspace. Find venues and services, send booking requests, and keep your event details and budget together — big moments, less planning.">
+  <title>Gather — Your kind of event. Without the chaos.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/app-assets/landing.css">
+  <!-- Photography: Unsplash (Unsplash License, free for commercial use). -->
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-header" id="site-header">
+    <a class="brand" href="/" aria-label="Gather home">
+      <span class="brand-mark">g</span><span class="brand-word">ather<span class="brand-dot">.</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+      <a href="#features">Everything</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#celebrations">Celebrations</a>
+    </nav>
+    <div class="header-actions">
+      <a class="sign-in-link" href="/login">Sign in</a>
+      <a class="btn btn-forest btn-sm" href="/login?role=host">Plan an event <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>Your event-planning workspace</span>
+        <h1 id="hero-title">Your kind of event.<span class="l2">Without the <span class="mark">chaos.</span></span></h1>
+        <p class="hero-lede">From finding the perfect venue to managing your budget, bookings and guest list, Gather brings every part of your event together in one happy place.</p>
+        <div class="hero-actions">
+          <a class="btn btn-forest" href="/login?role=host&amp;next=%2Fapp%3Fintent%3Dcreate">Plan an event <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a class="btn btn-ghost" href="#how-it-works">Explore how it works</a>
+        </div>
+        <div class="hero-trust">
+          <span class="trust-dots" aria-hidden="true"><span class="d1">H</span><span class="d2">V</span><span class="d3">B</span><span class="d4">g</span></span>
+          <span>One calm place for venues, vendors, budget &amp; RSVPs.</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-frame">
+          <img src="/app-assets/images/hero-dinner.jpg" alt="A candlelit celebration table set with flowers and glassware, ready for guests to gather" width="1700" height="1133" fetchpriority="high">
+        </div>
+        <div class="hero-badge" aria-hidden="true">Gather<b>well</b>est. today</div>
+
+        <div class="float-card float-event" role="img" aria-label="Sample event preview: Garden Party, planning 72 percent complete">
+          <div class="fc-row">
+            <span class="fc-date"><small>JUN</small><b>14</b></span>
+            <span class="fc-info"><strong>Garden Party</strong><span>Sat · 48 guests</span></span>
+          </div>
+          <div class="fc-bar"><i></i></div>
+          <div class="fc-caption">Planning · 72% ready</div>
+        </div>
+
+        <div class="float-card float-budget" role="img" aria-label="Sample budget snapshot: 1,840 remaining">
+          <div class="fb-k">Budget left</div>
+          <div class="fb-v">$1,840</div>
+          <div class="fb-sub">On track ✦</div>
+        </div>
+
+        <div class="float-card float-rsvp" role="img" aria-label="Sample RSVP: 42 guests said yes">
+          <span class="tick" aria-hidden="true">✓</span>
+          <span>42 said yes</span>
+        </div>
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true"><span class="line"></span>Scroll to explore</div>
+    </section>
+
+    <!-- ================= MARQUEE ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Big moments<span class="star">✦</span></span><span>Less planning<span class="star">✦</span></span><span>More celebrating<span class="star">✦</span></span><span>Big moments<span class="star">✦</span></span><span>Less planning<span class="star">✦</span></span><span>More celebrating<span class="star">✦</span></span>
+      </div>
+    </div>
+
+    <!-- ================= SECTION A — Everything ================= -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="section-head">
+        <div class="sh-left">
+          <span class="section-index">01 — Everything for your event</span>
+          <h2 id="features-title">One workspace for<br>every moving part.</h2>
+        </div>
+        <p>No more juggling spreadsheets, tabs and group chats. Here is what you can do inside Gather today.</p>
+      </div>
+
+      <div class="bento">
+        <a class="tile tile-venue reveal" href="/app?intent=venues">
+          <img src="/app-assets/images/wedding-table.jpg" alt="A long celebration table dressed for a reception" loading="lazy" width="1200" height="800">
+          <div class="tile-pad">
+            <span class="t-num" style="color:rgba(255,255,255,.7)">01</span>
+            <h3>Find your place</h3>
+            <p>Discover venues that suit your guest count, date and budget.</p>
+          </div>
+        </a>
+
+        <a class="tile tile-people reveal" href="/app?intent=services">
+          <img src="/app-assets/images/toast.jpg" alt="Friends raising glasses together at a gathering" loading="lazy" width="1000" height="667">
+          <div class="tile-pad">
+            <span class="t-num" style="color:rgba(255,255,255,.7)">02</span>
+            <h3>Bring the right people</h3>
+            <p>Explore vendor services and packages for your celebration.</p>
+          </div>
+        </a>
+
+        <div class="tile tile-budget reveal">
+          <div class="tile-pad">
+            <span class="t-num" style="color:rgba(255,255,255,.55)">03</span>
+            <span class="tile-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <h3>Keep the budget happy</h3>
+            <p>Track planned costs against your budget as plans take shape.</p>
+            <div class="mini-budget" aria-hidden="true">
+              <div class="mb-track"><i></i></div>
+              <div class="mb-row"><span>Committed</span><b>64%</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile tile-invites reveal">
+          <div class="tile-pad">
+            <span class="t-num">04</span>
+            <span class="tile-ico"><svg viewBox="0 0 24 24"><path d="M4 7l8 6 8-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+            <h3>Get everyone together</h3>
+            <p>Manage invitations and keep RSVP responses in one view.</p>
+          </div>
+        </div>
+
+        <div class="tile tile-control reveal">
+          <div class="tile-pad">
+            <span class="t-num">05</span>
+            <span class="tile-ico"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span>
+            <h3>Stay in control</h3>
+            <p>Follow booking requests and event details without the spreadsheets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION B — How it works ================= -->
+    <section class="steps-section" id="how-it-works" aria-labelledby="steps-title">
+      <div class="steps-head">
+        <span class="section-index" style="color:var(--lime)">02 — How Gather works</span>
+        <h2 id="steps-title">A good plan has a way<br>of <span class="mark">coming together.</span></h2>
+      </div>
+      <div class="steps-grid">
+        <article class="step reveal">
+          <div class="step-no">1</div>
+          <h3>Tell us your plan</h3>
+          <p>Choose the event date, guest count and budget. Your starting point can be simple.</p>
+          <span class="step-tag">Date · Guests · Budget</span>
+        </article>
+        <article class="step reveal">
+          <div class="step-no">2</div>
+          <h3>Find your perfect fit</h3>
+          <p>Explore relevant venues and vendor services that match your kind of event.</p>
+          <span class="step-tag">Venues · Services</span>
+        </article>
+        <article class="step reveal">
+          <div class="step-no">3</div>
+          <h3>Bring it all together</h3>
+          <p>Send booking requests and keep your details and budget close as the day nears.</p>
+          <span class="step-tag">Bookings · Budget</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= SECTION C — Celebrations ================= -->
+    <section class="celebrate" id="celebrations" aria-labelledby="celebrate-title">
+      <div class="section-head">
+        <div class="sh-left">
+          <span class="section-index">03 — Made for real-life celebrations</span>
+          <h2 id="celebrate-title">Different reasons.<br>Same lovely feeling.</h2>
+        </div>
+        <p>From a birthday dinner to a wedding weekend, a campus event to a team gathering — make a plan that feels like yours.</p>
+      </div>
+      <div class="collage">
+        <div class="cel cel-a"><img src="/app-assets/images/wedding-chairs.jpg" alt="Two decorated chairs and florals set for a wedding ceremony outdoors" loading="lazy"><span class="cel-label"><small>Weddings</small><strong>A day to remember</strong></span></div>
+        <div class="cel cel-b"><img src="/app-assets/images/balloons.jpg" alt="Soft pastel balloons floating at a birthday party" loading="lazy"><span class="cel-label"><small>Birthdays</small><strong>Make a wish</strong></span></div>
+        <div class="cel cel-c"><img src="/app-assets/images/dining-plate.jpg" alt="An intimate dinner party table with a plated course" loading="lazy"><span class="cel-label"><small>Dinner parties</small><strong>Gather &amp; feast</strong></span></div>
+        <div class="cel cel-d"><img src="/app-assets/images/hall.jpg" alt="A large hall set with rows of seating for a corporate or college event" loading="lazy"><span class="cel-label"><small>College &amp; work</small><strong>Big rooms, big days</strong></span></div>
+        <div class="cel cel-e"><img src="/app-assets/images/garden-dinner.png" alt="A candlelit garden dinner ready for friends" loading="lazy"><span class="cel-label"><small>Private parties</small><strong>Your people, your way</strong></span></div>
+        <div class="cel-note"><span>And every little moment in between.</span><span class="dash" aria-hidden="true"></span></div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION D — Final CTA ================= -->
+    <section class="final-cta" aria-labelledby="final-title">
+      <img src="/app-assets/images/sparklers.jpg" alt="" aria-hidden="true" loading="lazy">
+      <div class="cta-inner reveal">
+        <span class="cta-spark" aria-hidden="true">✦ ✦ ✦</span>
+        <h2 id="final-title">Something worth celebrating <span class="mark">starts here.</span></h2>
+        <p>Set up your first event in minutes. Browse venues and services, keep your budget in view, and let the good things come together.</p>
+        <a class="btn btn-lime" href="/login?role=host&amp;next=%2Fapp%3Fintent%3Dcreate">Start planning <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <a class="brand" href="/" aria-label="Gather home"><span class="brand-mark">g</span><span class="brand-word">ather<span class="brand-dot">.</span></span></a>
+      <p class="footer-tag">Big moments. Less planning. More celebrating.</p>
+      <div class="footer-links">
+        <a href="/app">Open workspace</a>
+        <a href="/app?intent=venues">Venues</a>
+        <a href="/app?intent=services">Services</a>
+        <a href="/api-docs" target="_blank" rel="noreferrer">API docs</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Gather — your event-planning workspace.</span>
+      <span>Made for bringing people together.</span>
+    </div>
+  </footer>
+
+  <script src="/app-assets/landing.js" defer></script>
+</body>
+</html>

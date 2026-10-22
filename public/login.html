@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fffdf6">
+  <title>Sign in · Gather</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/app-assets/login.css">
+</head>
+<body>
+  <main class="login-shell">
+    <section class="login-art" aria-label="Gather for every kind of event">
+      <a class="brand" href="/" aria-label="Gather home"><span class="brand-mark">g</span><span>ather<span class="brand-dot">.</span></span></a>
+      <div class="art-copy"><span class="eyebrow">A little something for everyone</span><h1>Bring your<br>kind of good<br><em>together.</em></h1><p>Plan an event, offer your services, or join the celebration as a guest.</p></div>
+      <img src="/app-assets/images/hero-dinner.jpg" alt="A candlelit dinner table set for a gathering">
+    </section>
+    <section class="login-panel">
+      <a class="back-home" href="/">&larr; Back to Gather</a>
+      <div class="login-content">
+        <span class="eyebrow">Your Gather account</span>
+        <h2 id="form-title">Welcome back.</h2>
+        <p class="intro" id="form-intro">Choose how you would like to use Gather today.</p>
+        <div class="role-picker" role="group" aria-label="Choose your Gather view">
+          <button type="button" class="role-choice selected" data-role="HOST"><span class="role-icon">✦</span><strong>Host</strong><small>Plan and manage events</small></button>
+          <button type="button" class="role-choice" data-role="VENDOR"><span class="role-icon">✿</span><strong>Vendor</strong><small>Offer event services</small></button>
+          <button type="button" class="role-choice" data-role="INVITEE"><span class="role-icon">♡</span><strong>Invitee</strong><small>Open your invitations</small></button>
+        </div>
+        <div class="form-tabs"><button type="button" class="form-tab selected" data-mode="login">Sign in</button><button type="button" class="form-tab" data-mode="register">Create account</button></div>
+        <form id="account-form">
+          <label id="name-wrap" class="is-hidden">Your name<input name="name" autocomplete="name" placeholder="Alex Morgan"></label>
+          <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" placeholder="Your password" required><small id="password-hint" class="is-hidden">At least 8 characters with uppercase, lowercase, a number, and a special character.</small></label>
+          <button class="submit-button" id="submit-button" type="submit">Sign in <span aria-hidden="true">&rarr;</span></button>
+        </form>
+        <p id="form-error" class="form-error" role="alert"></p>
+        <p class="role-note" id="role-note">You can switch between Host, Vendor, and Invitee views later using this same account.</p>
+      </div>
+      <footer>Made for bringing people together.</footer>
+    </section>
+  </main>
+  <script src="/app-assets/login.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+openapi: 3.0.3
+info:
+  title: Event Planning API
+  version: 1.0.0
+  description: OpenAPI description of the Event Planning API. Import this file into Swagger Editor.
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+tags:
+  - name: Health
+  - name: Authentication
+  - name: Events
+  - name: Marketplace
+  - name: Bookings
+  - name: Invitations
+  - name: Budget
+  - name: Notifications
+paths:
+  /:
+    get:
+      tags: [Health]
+      summary: API status
+      responses:
+        '200':
+          description: API is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: { type: string, example: Event Planning API }
+                  status: { type: string, example: running }
+                  health: { type: string, example: /api/health }
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Check API and database health
+      responses:
+        '200':
+          description: Database connected
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+        '500': { $ref: '#/components/responses/Error' }
+  /api/auth/register:
+    post:
+      tags: [Authentication]
+      summary: Create an account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Log in and receive a JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/auth/role:
+    patch:
+      tags: [Authentication]
+      summary: Switch the signed-in account between Host, Vendor, and Invitee views
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role: { type: string, enum: [HOST, VENDOR, INVITEE] }
+      responses:
+        '200': { description: Active workspace role changed }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/events:
+    get:
+      tags: [Events]
+      summary: List events accessible to the current host or invitee
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Event list, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Events]
+      summary: Create an event (host only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EventRequest' }
+      responses:
+        '201': { description: Event created, content: { application/json: { schema: { type: object, properties: { message: { type: string }, event_id: { type: integer, format: int64 } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/events/{id}:
+    get:
+      tags: [Events]
+      summary: Get event details
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Event details, content: { application/json: { schema: { type: object } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Events]
+      summary: Update an event (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EventUpdate' }
+      responses:
+        '200': { description: Event updated, content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Events]
+      summary: Delete an event (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Event deleted, content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/venues:
+    get:
+      tags: [Marketplace]
+      summary: Search venues
+      parameters:
+        - name: min_capacity
+          in: query
+          required: false
+          description: Only show venues that can hold at least this many guests.
+          schema: { type: integer, minimum: 1 }
+          example: 100
+        - name: max_price
+          in: query
+          required: false
+          description: Only show venues at or below this base price.
+          schema: { type: number, minimum: 0 }
+          example: 50000
+        - name: location
+          in: query
+          required: false
+          description: Match part of a venue address.
+          schema: { type: string }
+          example: Amravati
+      responses:
+        '200': { description: Matching venues, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+    post:
+      tags: [Marketplace]
+      summary: Create a venue listing (vendor only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/VenueRequest' }
+      responses:
+        '201': { description: Venue created, content: { application/json: { schema: { type: object, properties: { message: { type: string }, venue_id: { type: integer, format: int64 } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/vendors/profile:
+    post:
+      tags: [Marketplace]
+      summary: Create or update the signed-in vendor's business profile
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_name]
+              properties:
+                business_name: { type: string, example: Gather & Co. Events }
+                description: { type: string, nullable: true }
+                business_location: { type: string, nullable: true }
+      responses:
+        '200': { description: Vendor profile saved }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/offerings:
+    get:
+      tags: [Marketplace]
+      summary: Search vendor offerings
+      parameters:
+        - name: category
+          in: query
+          required: false
+          description: Filter offerings by their category.
+          schema: { type: string }
+          example: Catering
+        - name: attendees
+          in: query
+          required: false
+          description: Only show offerings that can serve this guest count.
+          schema: { type: integer, minimum: 1 }
+          example: 100
+        - name: max_price
+          in: query
+          required: false
+          description: Only show offerings at or below this price.
+          schema: { type: number, minimum: 0 }
+          example: 30000
+      responses:
+        '200': { description: Matching offerings, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+    post:
+      tags: [Marketplace]
+      summary: Create an offering listing (vendor only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OfferingRequest' }
+      responses:
+        '201': { description: Offering created, content: { application/json: { schema: { type: object, properties: { message: { type: string }, offering_id: { type: integer, format: int64 } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/bookings:
+    get:
+      tags: [Bookings]
+      summary: List bookings for the current host or vendor
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Booking list, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Bookings]
+      summary: Create a pending booking (host only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookingRequest' }
+      responses:
+        '201': { description: Booking request created, content: { application/json: { schema: { type: object, properties: { message: { type: string }, booking_id: { type: integer, format: int64 }, status: { type: string, example: PENDING } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/bookings/{id}/confirm:
+    patch:
+      tags: [Bookings]
+      summary: Confirm a pending booking (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookingConfirmRequest' }
+      responses:
+        '200': { description: Confirmation procedure executed, content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/bookings/{id}/cancel:
+    patch:
+      tags: [Bookings]
+      summary: Cancel a booking (owning host or relevant vendor)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Booking cancelled, content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/bookings/{id}/reject:
+    patch:
+      tags: [Bookings]
+      summary: Reject a pending booking (relevant vendor only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Booking rejected, content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/events/{id}/budget:
+    get:
+      tags: [Budget]
+      summary: Get the budget summary for an event (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Budget summary, content: { application/json: { schema: { type: object } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/events/{id}/invitations:
+    post:
+      tags: [Invitations]
+      summary: Invite people to an event (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InvitationsRequest' }
+      responses:
+        '201': { description: Invitations saved, content: { application/json: { schema: { type: object, properties: { message: { type: string }, invitations: { type: array, items: { type: object } } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/invitations/mine:
+    get:
+      tags: [Invitations]
+      summary: List invitations for the current invitee
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Invitation list, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/invitations/{id}/rsvp:
+    patch:
+      tags: [Invitations]
+      summary: Respond to an invitation (invitee only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rsvp_status]
+              properties:
+                rsvp_status: { type: string, enum: [ACCEPTED, DECLINED] }
+                example:
+                  rsvp_status: ACCEPTED
+      responses:
+        '200': { description: RSVP updated, content: { application/json: { schema: { type: object, properties: { message: { type: string }, rsvp_status: { type: string } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/notifications:
+    get:
+      tags: [Notifications]
+      summary: List current user's notifications
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Notification list, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /api/notifications/{id}/read:
+    patch:
+      tags: [Notifications]
+      summary: Mark a notification as read
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Notification marked read, content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Resource identifier
+      schema: { type: integer, format: int64, minimum: 1, example: 1 }
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    Error:
+      type: object
+      properties:
+        message: { type: string, example: Request failed }
+    Message:
+      type: object
+      properties:
+        message: { type: string }
+    Health:
+      type: object
+      properties:
+        status: { type: string, example: ok }
+        database: { type: string, example: connected }
+    User:
+      type: object
+      properties:
+        user_id: { type: integer, format: int64 }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [HOST, VENDOR, INVITEE] }
+    RegisterRequest:
+      type: object
+      required: [name, email, password, role]
+      example:
+        name: Test Host
+        email: host@example.com
+        password: StrongPass123!
+        role: HOST
+      properties:
+        name: { type: string, example: Test Host }
+        email: { type: string, format: email, example: host@example.com }
+        password:
+          type: string
+          format: password
+          minLength: 8
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$'
+          description: Must contain at least 8 characters, including an uppercase letter, lowercase letter, number, and special character.
+        role: { type: string, enum: [HOST, VENDOR, INVITEE] }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      example:
+        email: host@example.com
+        password: StrongPass123!
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+    AuthResponse:
+      type: object
+      properties:
+        message: { type: string }
+        token: { type: string, description: Present after registration or login; use as a Bearer token. }
+        user: { $ref: '#/components/schemas/User' }
+    EventRequest:
+      type: object
+      required: [name, event_type, event_date, start_time, duration_hours, attendee_count, budget]
+      example:
+        name: College Tech Fest
+        event_type: College Event
+        event_date: '2026-12-15'
+        start_time: '10:00:00'
+        duration_hours: 5
+        attendee_count: 100
+        budget: 50000
+      properties:
+        name: { type: string, example: College Tech Fest }
+        event_type: { type: string, example: College Event }
+        event_date: { type: string, format: date, example: '2026-12-15' }
+        start_time: { type: string, example: '10:00:00' }
+        duration_hours: { type: number, minimum: 0 }
+        attendee_count: { type: integer, minimum: 1 }
+        budget: { type: number, minimum: 0 }
+    EventUpdate:
+      type: object
+      minProperties: 1
+      example:
+        attendee_count: 120
+        budget: 60000
+      properties:
+        name: { type: string }
+        event_type: { type: string }
+        event_date: { type: string, format: date }
+        start_time: { type: string }
+        duration_hours: { type: number }
+        attendee_count: { type: integer }
+        budget: { type: number }
+        status: { type: string }
+    VenueRequest:
+      type: object
+      required: [name, address, capacity]
+      example:
+        name: Garden Pavilion
+        address: 12 Lake Road, Amravati
+        capacity: 120
+        facilities: [Parking, Outdoor seating]
+        base_price: 25000
+      properties:
+        name: { type: string }
+        address: { type: string }
+        capacity: { type: integer, minimum: 1 }
+        facilities: { type: array, items: { type: string } }
+        base_price: { type: number, minimum: 0, nullable: true }
+    OfferingRequest:
+      type: object
+      required: [category, offering_type, name]
+      example:
+        category: Catering
+        offering_type: Buffet
+        name: Garden Party Menu
+        description: Seasonal buffet service for events
+        price: 450
+        pricing_unit: per person
+        min_capacity: 20
+        max_capacity: 150
+      properties:
+        category: { type: string }
+        offering_type: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        price: { type: number, minimum: 0, nullable: true }
+        pricing_unit: { type: string, nullable: true }
+        min_capacity: { type: integer, minimum: 0, nullable: true }
+        max_capacity: { type: integer, minimum: 0, nullable: true }
+    BookingRequest:
+      type: object
+      required: [event_id, start_datetime, end_datetime]
+      example:
+        event_id: 1
+        venue_id: 1
+        start_datetime: '2026-12-15T10:00:00Z'
+        end_datetime: '2026-12-15T15:00:00Z'
+        agreed_price: 25000
+      properties:
+        event_id: { type: integer, format: int64 }
+        venue_id: { type: integer, format: int64, nullable: true }
+        offering_id: { type: integer, format: int64, nullable: true }
+        start_datetime: { type: string, format: date-time }
+        end_datetime: { type: string, format: date-time }
+        agreed_price: { type: number, minimum: 0, nullable: true }
+    BookingConfirmRequest:
+      type: object
+      description: Optional agreed price. If omitted, the API uses the booking's agreed price or the listing price.
+      properties:
+        agreed_price: { type: number, minimum: 0, nullable: true, example: 18000 }
+    InvitationsRequest:
+      type: object
+      required: [invitees]
+      example:
+        invitees:
+          - name: Alex Morgan
+            email: alex@example.com
+      properties:
+        invitees:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [name, email]
+            properties:
+              name: { type: string }
+              email: { type: string, format: email }

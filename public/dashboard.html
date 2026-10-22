@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fffdf6">
+  <meta name="description" content="Your Gather workspace — plan events, browse venues and services, and keep your budget in view.">
+  <title>Your workspace · Gather</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/app-assets/app.css">
+  <!-- Photography: Unsplash (Unsplash License, free for commercial use). -->
+</head>
+<body>
+  <aside class="sidebar" aria-label="Workspace navigation">
+    <a class="brand" href="/" aria-label="Gather home"><span class="brand-mark"><span class="brand-g">g</span></span><span class="brand-name">ather<span class="brand-dot">.</span></span></a>
+    <div class="workspace-label">Workspace</div>
+    <nav class="nav-list" aria-label="Main navigation">
+      <button class="nav-item active" type="button" data-view="home"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10 8.5-7 8.5 7v10.5H14v-6h-4v6H3.5z"/></svg><span>Overview</span></button>
+      <button class="nav-item" type="button" data-view="events"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 10h17M7 14h3m4 0h3m-10 3h3"/></svg><span>My events</span></button>
+      <button class="nav-item" type="button" data-view="venues"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 10c0 5.2-7.5 11-7.5 11S4.5 15.2 4.5 10a7.5 7.5 0 1 1 15 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Find a venue</span></button>
+      <button class="nav-item" type="button" data-view="offerings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 14.3 9.7 21.2 12l-6.9 2.3L12 21.2l-2.3-6.9L2.8 12l6.9-2.3Z"/></svg><span>Services</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <a class="help-card" href="/api-docs" target="_blank" rel="noreferrer"><span class="help-icon" aria-hidden="true">?</span><span><strong>Need a hand?</strong><small>Browse the API guide</small></span><span class="external-icon" aria-hidden="true">↗</span></a>
+      <div class="profile-row"><div class="avatar" id="avatar">G</div><div class="profile-copy"><strong id="profile-name">Guest planner</strong><span id="profile-role">Not signed in</span></div><button class="profile-action" id="auth-action" type="button" aria-label="Sign in">Sign in</button></div>
+    </div>
+  </aside>
+
+  <main class="main-area" id="home">
+    <header class="topbar"><div class="breadcrumb"><span>Workspace</span><span class="crumb-slash" aria-hidden="true">/</span><strong id="crumb-current">Overview</strong></div><div class="top-actions"><time class="today-label" id="today-label"></time><button class="button button-outline top-create" id="top-create" type="button">Plan an event <span aria-hidden="true">+</span></button><button class="user-chip" id="user-chip" type="button" aria-label="Account"><span class="mini-avatar" id="mini-avatar">G</span><span id="top-user-name">Guest</span><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button></div></header>
+
+    <section class="welcome-row" aria-labelledby="page-title">
+      <div class="welcome-copy-block">
+        <div class="eyebrow"><span class="eyebrow-line"></span>Make room for a good time</div>
+        <h1 id="page-title">Good things start<br><span>with a plan.</span></h1>
+        <p class="welcome-copy" id="welcome-copy">Your next memorable moment is just a few details away.</p>
+        <button class="button button-primary hero-cta" id="hero-create" type="button">Plan your event <span aria-hidden="true">&rarr;</span></button>
+      </div>
+      <div class="hero-art">
+        <img id="workspace-hero-image" src="/app-assets/images/hero-dinner.jpg" alt="A candlelit celebration table set for guests" width="1700" height="1133" loading="lazy">
+        <div class="hero-photo-overlay"></div>
+        <div class="hero-art-badge" aria-hidden="true">Let's<br>gather</div>
+        <div class="hero-caption" id="workspace-hero-caption">Make a day worth remembering</div>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <section class="primary-column" aria-labelledby="events-heading">
+        <div class="section-heading"><div><div class="section-kicker">Your plans</div><h2 id="events-heading">Coming together</h2></div><div class="heading-actions"><button class="text-link" id="all-events" type="button">All events <span aria-hidden="true">&rarr;</span></button></div></div>
+        <div id="event-list" class="event-list" aria-live="polite"><div class="empty-state"><div class="empty-icon" aria-hidden="true">g</div><strong>Your plans will live here</strong><p>Sign in to see your events or start a new one.</p><button class="button button-primary" id="empty-auth" type="button">Get started <span aria-hidden="true">&rarr;</span></button></div></div>
+
+        <div class="section-heading discover-heading"><div><div class="section-kicker">A good place to start</div><h2>Make it happen</h2></div></div>
+        <div class="discover-grid">
+          <button class="discover-card" type="button" data-view="venues">
+            <img src="/app-assets/images/wedding-table.jpg" alt="A venue dressed for a celebration" loading="lazy">
+            <span class="discover-inner"><span class="discover-label">The setting</span><strong>Find a place<br>that feels like you</strong></span>
+            <span class="discover-arrow" aria-hidden="true">&rarr;</span>
+          </button>
+          <button class="discover-card" type="button" data-view="offerings">
+            <img src="/app-assets/images/catering.jpg" alt="A catering spread at an event" loading="lazy">
+            <span class="discover-inner"><span class="discover-label">The little details</span><strong>Find the people<br>who make it special</strong></span>
+            <span class="discover-arrow" aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </section>
+
+      <aside class="right-column" aria-label="Planning notes">
+        <section class="side-panel budget-panel" aria-labelledby="budget-title"><div class="panel-top"><div><div class="section-kicker">Budget snapshot</div><h3 id="budget-title">Keep the plan<br>in perspective.</h3></div><div class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div></div><p id="budget-copy">Sign in as a host to see a real budget summary for your event.</p><div class="budget-value-row hidden" id="budget-values"><strong id="budget-remaining">--</strong><span>remaining</span></div><div class="budget-track hidden" id="budget-track"><span id="budget-fill"></span></div><small class="budget-event-name hidden" id="budget-event-name"></small><button class="panel-link" id="budget-link" type="button">View your events <span aria-hidden="true">&rarr;</span></button><div class="budget-decoration" aria-hidden="true"><span></span></div></section>
+        <section class="side-panel note-panel"><div class="section-kicker">A note for the day</div><h3>Leave room for<br>the good stuff.</h3><div class="note-rule"></div><p>Start with a date and a feeling. The rest can come together one good decision at a time.</p><div class="note-signoff">A note from Gather <span aria-hidden="true">g</span></div></section>
+      </aside>
+    </div>
+    <footer class="footer"><span>Made for bringing people together.</span><a href="/api-docs" target="_blank" rel="noreferrer">API documentation ↗</a></footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog class="modal" id="auth-modal" aria-labelledby="auth-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close dialog">&times;</button></form><div class="modal-kicker">Welcome to Gather</div><h2 id="auth-title">Come on in.</h2><p class="modal-intro" id="auth-intro">Sign in to see your plans and keep the good things moving.</p><div class="auth-tabs" role="tablist" aria-label="Account access"><button class="auth-tab selected" type="button" data-auth-mode="login" role="tab" aria-selected="true">Sign in</button><button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">Create account</button></div><form id="auth-form" class="form-stack"><label id="name-field" class="hidden">Your name<input name="name" placeholder="Alex Morgan" autocomplete="name"></label><label>Email address<input type="email" name="email" placeholder="you@example.com" required autocomplete="email"></label><label>Password<input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password"><small id="password-hint" class="password-hint hidden">New passwords need at least 8 characters, including uppercase and lowercase letters, a number, and a special character.</small></label><label id="role-field" class="hidden">I am here as<select name="role"><option value="HOST">Planning an event</option><option value="VENDOR">Offering a service</option><option value="INVITEE">An invited guest</option></select></label><button class="button button-primary full-button" id="auth-submit" type="submit">Sign in <span aria-hidden="true">&rarr;</span></button></form><p class="form-error" id="auth-error" role="alert"></p><p class="modal-footnote" id="auth-footnote">New to Gather? Create an account to begin.</p></dialog>
+
+  <dialog class="modal event-modal" id="event-modal" aria-labelledby="event-modal-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close dialog">&times;</button></form><div class="modal-kicker">Let's make a plan</div><h2 id="event-modal-title">Start with the details.</h2><p class="modal-intro">You can change these later as your plans take shape.</p><form id="event-form" class="form-stack"><label>Event name<input name="name" placeholder="Summer garden party" required maxlength="120"></label><label>What are you celebrating?<input name="event_type" placeholder="Birthday, wedding, reunion..." required maxlength="80"></label><div class="form-two"><label>Date<input name="event_date" type="date" required></label><label>Start time<input name="start_time" type="time" required></label></div><div class="form-two"><label>How many guests?<input name="attendee_count" type="number" min="1" placeholder="50" required></label><label>Budget<input name="budget" type="number" min="0" step="0.01" placeholder="5000" required></label></div><label>How many hours?<input name="duration_hours" type="number" min="0.5" step="0.5" value="4" required></label><button class="button button-primary full-button" type="submit">Create my event <span aria-hidden="true">&rarr;</span></button></form><p class="form-error" id="event-error" role="alert"></p></dialog>
+
+  <dialog class="modal browse-modal" id="browse-modal" aria-labelledby="browse-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close dialog">&times;</button></form><div class="modal-kicker" id="browse-kicker">The setting</div><h2 id="browse-title">Find a place.</h2><p class="modal-intro" id="browse-intro">Search for a setting that feels right for your day.</p><div class="browse-visual"><img id="browse-image" src="/app-assets/images/hall.jpg" alt="A welcoming event venue" loading="lazy"><span id="browse-image-caption">Find a setting for your event</span></div><form id="browse-form" class="search-row"><label class="visually-hidden" for="browse-search">Search</label><input id="browse-search" name="search" placeholder="Try a location or category"><button class="button button-primary" type="submit">Search</button></form><div class="browse-filters" id="browse-filters"></div><div id="browse-results" class="browse-results" aria-live="polite"><p class="browse-hint">Tell us what you are looking for and we will find a few options.</p></div></dialog>
+
+  <dialog class="modal booking-modal" id="booking-modal" aria-labelledby="booking-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close dialog">&times;</button></form><div class="modal-kicker" id="booking-kicker">A good next step</div><div class="booking-visual"><img id="booking-image" src="/app-assets/images/wedding-table.jpg" alt="A detail chosen for your event" loading="lazy"><span id="booking-image-caption">A thoughtful detail for your event</span></div><h2 id="booking-title">Request a booking.</h2><p class="modal-intro" id="booking-description"></p><form id="booking-form" class="form-stack"><label>Which event is this for?<select name="event_id" id="booking-event" required></select></label><div class="form-two"><label>Date<input name="date" type="date" required></label><label>Start time<input name="time" type="time" required></label></div><label>How many hours?<input name="duration_hours" type="number" min="0.5" step="0.5" value="4" required></label><label>Agreed total price (optional)<input name="agreed_price" type="number" min="0" step="0.01" placeholder="Add after discussing with the vendor"></label><button class="button button-primary full-button" type="submit">Send booking request <span aria-hidden="true">&rarr;</span></button></form><p class="form-error" id="booking-error" role="alert"></p></dialog>
+  <script src="/app-assets/app.js" defer></script>
+</body>
+</html>
