@@ -1,0 +1,12 @@
+{
+  "maxDurationSeconds": 3600,
+  "minDurationSeconds": 20,
+  "maxVus": 1000,
+  "maxAccountsPerRole": 400,
+  "maxThinkTimeMs": 60000,
+  "maxRunsPerHour": 30,
+  "minSecondsBetweenRuns": 5,
+  "logRetentionRuns": 50,
+  "maxStoredRuns": 500,
+  "gracefulStopSeconds": 30
+}

@@ -1,0 +1,13 @@
+{
+  "managed-local": {
+    "label": "Managed local test target (recommended)",
+    "type": "managed",
+    "enabled": true,
+    "production": false,
+    "description": "Creates a throw-away copy of the eventplanningdb schema and a second copy of the Gather API for this run, then removes both. Your real data and your running app are never touched.",
+    "appPort": 5056,
+    "probePort": 5057,
+    "database": "eventplanningdb_loadtest",
+    "allowWrites": true
+  }
+}

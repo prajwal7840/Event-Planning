@@ -9,11 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/app-assets/app.css">
+  <link rel="stylesheet" href="/app-assets/app.css?v=requirements-5">
   <!-- Photography: Unsplash (Unsplash License, free for commercial use). -->
 </head>
 <body>
-  <aside class="sidebar" aria-label="Workspace navigation">
+      <aside class="sidebar" aria-label="Workspace navigation">
     <a class="brand" href="/" aria-label="Gather home"><span class="brand-mark"><span class="brand-g">g</span></span><span class="brand-name">ather<span class="brand-dot">.</span></span></a>
     <div class="workspace-label">Workspace</div>
     <nav class="nav-list" aria-label="Main navigation">
@@ -21,6 +21,9 @@
       <button class="nav-item" type="button" data-view="events"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 10h17M7 14h3m4 0h3m-10 3h3"/></svg><span>My events</span></button>
       <button class="nav-item" type="button" data-view="venues"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 10c0 5.2-7.5 11-7.5 11S4.5 15.2 4.5 10a7.5 7.5 0 1 1 15 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Find a venue</span></button>
       <button class="nav-item" type="button" data-view="offerings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 14.3 9.7 21.2 12l-6.9 2.3L12 21.2l-2.3-6.9L2.8 12l6.9-2.3Z"/></svg><span>Services</span></button>
+      <button class="nav-item" type="button" data-view="invite"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2m7-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm11-2v6m-3-3h6"/></svg><span>Invite guests</span></button>
+      <button class="nav-item hidden" type="button" data-view="vendor-services"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 14.3 9.7 21.2 12l-6.9 2.3L12 21.2l-2.3-6.9L2.8 12l6.9-2.3Z"/></svg><span>My services</span></button>
+      <button class="nav-item hidden" type="button" data-view="vendor-bookings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 10h17M7 14h3m4 0h3m-10 3h3"/></svg><span>My bookings</span></button>
     </nav>
     <div class="sidebar-bottom">
       <a class="help-card" href="/api-docs" target="_blank" rel="noreferrer"><span class="help-icon" aria-hidden="true">?</span><span><strong>Need a hand?</strong><small>Browse the API guide</small></span><span class="external-icon" aria-hidden="true">↗</span></a>
@@ -29,7 +32,7 @@
   </aside>
 
   <main class="main-area" id="home">
-    <header class="topbar"><div class="breadcrumb"><span>Workspace</span><span class="crumb-slash" aria-hidden="true">/</span><strong id="crumb-current">Overview</strong></div><div class="top-actions"><time class="today-label" id="today-label"></time><button class="button button-outline top-create" id="top-create" type="button">Plan an event <span aria-hidden="true">+</span></button><button class="user-chip" id="user-chip" type="button" aria-label="Account"><span class="mini-avatar" id="mini-avatar">G</span><span id="top-user-name">Guest</span><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button></div></header>
+    <header class="topbar"><div class="breadcrumb"><span>Workspace</span><span class="crumb-slash" aria-hidden="true">/</span><strong id="crumb-current">Overview</strong></div><div class="top-actions"><time class="today-label" id="today-label"></time><button class="notification-trigger" id="notification-trigger" type="button" aria-label="Notifications"><span aria-hidden="true">♧</span><b class="notification-count hidden" id="notification-count"></b></button><button class="button button-outline top-create" id="top-create" type="button">Plan an event <span aria-hidden="true">+</span></button><button class="user-chip" id="user-chip" type="button" aria-label="Account"><span class="mini-avatar" id="mini-avatar">G</span><span id="top-user-name">Guest</span><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button></div></header>
 
     <section class="welcome-row" aria-labelledby="page-title">
       <div class="welcome-copy-block">
@@ -67,7 +70,14 @@
       </section>
 
       <aside class="right-column" aria-label="Planning notes">
-        <section class="side-panel budget-panel" aria-labelledby="budget-title"><div class="panel-top"><div><div class="section-kicker">Budget snapshot</div><h3 id="budget-title">Keep the plan<br>in perspective.</h3></div><div class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div></div><p id="budget-copy">Sign in as a host to see a real budget summary for your event.</p><div class="budget-value-row hidden" id="budget-values"><strong id="budget-remaining">--</strong><span>remaining</span></div><div class="budget-track hidden" id="budget-track"><span id="budget-fill"></span></div><small class="budget-event-name hidden" id="budget-event-name"></small><button class="panel-link" id="budget-link" type="button">View your events <span aria-hidden="true">&rarr;</span></button><div class="budget-decoration" aria-hidden="true"><span></span></div></section>
+        <section class="side-panel vendor-booking-panel hidden" aria-labelledby="vendor-booking-panel-title">
+          <div class="panel-top"><div><div class="section-kicker">Your bookings</div><h3 id="vendor-booking-panel-title">Work on the calendar</h3></div><div class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-11 4h3"/></svg></div></div>
+          <div class="vendor-booking-stats" id="vendor-booking-stats">Loading booking activity…</div>
+          <div class="vendor-booking-preview" id="vendor-booking-preview" aria-live="polite"><span class="vendor-preview-empty">Your booking activity will appear here.</span></div>
+          <button class="panel-link" id="vendor-view-bookings" type="button">View all bookings <span aria-hidden="true">→</span></button>
+          <div class="budget-decoration" aria-hidden="true"><span></span></div>
+        </section>
+        <section class="side-panel budget-panel" aria-labelledby="budget-title"><div class="panel-top"><div><div class="section-kicker">Budget snapshot</div><h3 id="budget-title">Keep the plan<br>in perspective.</h3></div><div class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div></div><p id="budget-copy">Sign in as a host to see a real budget summary for your event.</p><select id="budget-event-select" class="budget-event-select hidden" aria-label="Choose an event budget"></select><div class="budget-value-row hidden" id="budget-values"><strong id="budget-remaining">--</strong><span>remaining</span></div><div class="budget-track hidden" id="budget-track"><span id="budget-fill"></span></div><small class="budget-event-name hidden" id="budget-event-name"></small><button class="panel-link" id="budget-link" type="button">View your events <span aria-hidden="true">&rarr;</span></button><div class="budget-decoration" aria-hidden="true"><span></span></div></section>
         <section class="side-panel note-panel"><div class="section-kicker">A note for the day</div><h3>Leave room for<br>the good stuff.</h3><div class="note-rule"></div><p>Start with a date and a feeling. The rest can come together one good decision at a time.</p><div class="note-signoff">A note from Gather <span aria-hidden="true">g</span></div></section>
       </aside>
     </div>
@@ -83,6 +93,8 @@
   <dialog class="modal browse-modal" id="browse-modal" aria-labelledby="browse-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close dialog">&times;</button></form><div class="modal-kicker" id="browse-kicker">The setting</div><h2 id="browse-title">Find a place.</h2><p class="modal-intro" id="browse-intro">Search for a setting that feels right for your day.</p><div class="browse-visual"><img id="browse-image" src="/app-assets/images/hall.jpg" alt="A welcoming event venue" loading="lazy"><span id="browse-image-caption">Find a setting for your event</span></div><form id="browse-form" class="search-row"><label class="visually-hidden" for="browse-search">Search</label><input id="browse-search" name="search" placeholder="Try a location or category"><button class="button button-primary" type="submit">Search</button></form><div class="browse-filters" id="browse-filters"></div><div id="browse-results" class="browse-results" aria-live="polite"><p class="browse-hint">Tell us what you are looking for and we will find a few options.</p></div></dialog>
 
   <dialog class="modal booking-modal" id="booking-modal" aria-labelledby="booking-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close dialog">&times;</button></form><div class="modal-kicker" id="booking-kicker">A good next step</div><div class="booking-visual"><img id="booking-image" src="/app-assets/images/wedding-table.jpg" alt="A detail chosen for your event" loading="lazy"><span id="booking-image-caption">A thoughtful detail for your event</span></div><h2 id="booking-title">Request a booking.</h2><p class="modal-intro" id="booking-description"></p><form id="booking-form" class="form-stack"><label>Which event is this for?<select name="event_id" id="booking-event" required></select></label><div class="form-two"><label>Date<input name="date" type="date" required></label><label>Start time<input name="time" type="time" required></label></div><label>How many hours?<input name="duration_hours" type="number" min="0.5" step="0.5" value="4" required></label><label>Agreed total price (optional)<input name="agreed_price" type="number" min="0" step="0.01" placeholder="Add after discussing with the vendor"></label><button class="button button-primary full-button" type="submit">Send booking request <span aria-hidden="true">&rarr;</span></button></form><p class="form-error" id="booking-error" role="alert"></p></dialog>
-  <script src="/app-assets/app.js" defer></script>
+
+  <dialog class="modal event-details-modal" id="event-details-modal" aria-labelledby="event-details-title"><form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close event details">&times;</button></form><div class="modal-kicker">YOUR EVENT</div><h2 id="event-details-title">Event details</h2><p class="modal-intro" id="event-details-intro"></p><div id="event-booking-details" class="event-booking-details" aria-live="polite"><p class="browse-hint">Loading selected venues and services…</p></div></dialog>
+  <script src="/app-assets/app.js?v=requirements-6" defer></script>
 </body>
 </html>

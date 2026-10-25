@@ -15,7 +15,8 @@ Starter REST API for the Event Planning and Management Application using Node.js
    - macOS/Linux: `cp .env.example .env`
 4. Edit `.env` with your MySQL credentials.
 5. Set `JWT_SECRET` to a random secret of at least 32 characters.
-6. Run `npm run dev`.
+6. Apply the SQL migrations in `migrations/` to the existing `eventplanningdb` database. They add account details, count pending bookings in budget commitments, and support invitee contact-sharing and delivery status.
+7. Run `npm run dev`.
 
 For a full demo catalog, run `npm run seed:demo`. This safely adds eight sample venues and eight services, a demo host with six upcoming events and booking examples, matching availability slots, a demo invitee with invitations, and sample notifications. It does not change the schema and can be run again safely.
 
@@ -39,10 +40,12 @@ Event planning workspace: `http://localhost:5000/app`
 Interactive API docs: `http://localhost:5000/api-docs`
 Health check: `GET http://localhost:5000/api/health`
 
+Hosts can use **Invite guests** in the workspace sidebar to save invitations by email. Registered invitees receive an in-app update; unregistered invitees can be reached by sharing the personalized poster. Email delivery is available when `RESEND_API_KEY` and `INVITATION_FROM_EMAIL` are configured. Set `APP_BASE_URL` to the public Gather URL before enabling email delivery. Per-invite delivery results appear in the host guest list.
+
 ## 3. Authentication
 Register: `POST /api/auth/register` (creates the account and returns a JWT)
 ```json
-{"name":"Test Host","email":"host@example.com","password":"StrongPass123!","role":"HOST"}
+{"name":"Test Host","email":"host@example.com","password":"StrongPass123!","role":"HOST","age":25,"phone":"+1 555 123 4567","city":"Amravati"}
 ```
 Login: `POST /api/auth/login`
 ```json
@@ -55,7 +58,7 @@ Roles: `HOST`, `VENDOR`, `INVITEE`.
 
 New passwords must be at least 8 characters and include an uppercase letter, lowercase letter, number, and special character. The API enforces this rule during registration; sign-in continues to accept existing passwords. Authentication and authorization are handled in layers. The auth service hashes passwords and issues signed JWTs at login. Protected-route middleware verifies the JWT and loads the current user and role from the database. Role middleware checks the roles allowed for a route, while services check access to specific records (for example, a host must own an event) and repositories apply those ownership conditions in their database queries. The password hash is never returned in the account response. Configure `JWT_SECRET` with at least 32 characters.
 
-**Vendor onboarding note:** registration creates the `app_user` record. The vendor must also have a `vendor_profile` record before creating listings. This starter intentionally does not silently create a vendor profile because your schema may require a business name. Add a vendor profile endpoint/workflow before vendor listing creation.
+Vendor registration creates the `app_user` record. The vendor profile is created or updated when they add a service or venue; the vendor workspace can then manage listings and availability.
 
 ## 4. Endpoint list
 
@@ -64,6 +67,7 @@ New passwords must be at least 8 characters and include an uppercase letter, low
 | GET | `/api/health` | Public | Check API and database |
 | POST | `/api/auth/register` | Public | Register account |
 | POST | `/api/auth/login` | Public | Login and get JWT |
+| GET/PATCH | `/api/auth/profile` | Authenticated | Update profile and invitee contact-sharing preference |
 | GET | `/api/events` | Host / invitee | List accessible events |
 | POST | `/api/events` | Host | Create event |
 | GET | `/api/events/:id` | Host / invitee | Event details |
@@ -71,13 +75,21 @@ New passwords must be at least 8 characters and include an uppercase letter, low
 | DELETE | `/api/events/:id` | Host | Delete own event |
 | GET | `/api/venues?min_capacity=100&max_price=50000&location=Amravati` | Public | Search venues |
 | POST | `/api/venues` | Vendor | Add venue |
+| PATCH/DELETE | `/api/venues/:id` | Owning vendor | Update/delete venue |
 | GET | `/api/offerings?category=Catering&attendees=100&max_price=30000` | Public | Search services/packages |
 | POST | `/api/offerings` | Vendor | Add offering |
+| GET | `/api/vendors/profile` | Vendor | Read profile and own listings |
+| PATCH/DELETE | `/api/offerings/:id` | Owning vendor | Update/deactivate offering |
+| GET/POST | `/api/availability` | Vendor | List/create availability slots |
+| PATCH/DELETE | `/api/availability/:id` | Owning vendor | Change/remove availability |
 | GET | `/api/bookings` | Host / vendor | List bookings visible to role |
 | POST | `/api/bookings` | Host | Create pending booking |
-| PATCH | `/api/bookings/:id/confirm` | Host | Confirm via stored procedure |
+| PATCH | `/api/bookings/:id/confirm` | Host / owning vendor | Confirm via stored procedure |
+| PATCH | `/api/bookings/:id` | Host | Modify pending booking request |
 | PATCH | `/api/bookings/:id/cancel` | Host / relevant vendor | Cancel booking |
 | PATCH | `/api/bookings/:id/reject` | Relevant vendor | Reject pending booking |
+| GET/POST | `/api/events/:id/expenses` | Host | List/create event expenses |
+| PATCH/DELETE | `/api/expenses/:id` | Owning host | Update/remove expense |
 | POST | `/api/events/:id/invitations` | Host | Add invitees |
 | GET | `/api/invitations/mine` | Invitee | List invitations |
 | PATCH | `/api/invitations/:id/rsvp` | Invitee | Accept/decline invitation |
@@ -104,7 +116,8 @@ New passwords must be at least 8 characters and include an uppercase letter, low
 - This code expects the column names described in your project notes, including `booking.start_datetime`, `booking.end_datetime`, `event.start_time`, and `v_event_budget_summary`.
 - Booking confirmation calls `sp_confirm_booking(IN p_booking_id BIGINT UNSIGNED, IN p_agreed_price DECIMAL(12,2))`. The optional `agreed_price` request body can override the booking/listing price; the API passes `NULL` when it is omitted.
 - Booking creation makes a `PENDING` booking. Do not directly set it to `CONFIRMED`; use the stored procedure and database validation rules.
-- Your schema may use `availability_slot.start_datetime` / `end_datetime` or different names. This starter does not yet manage availability slots; add that route after verifying exact schema.
+- Vendor availability uses `availability_slot.start_datetime` / `end_datetime`. Search checks date/time slots when supplied; confirmation also checks availability, capacity, blocked times, and conflicting confirmed bookings in the database procedure/trigger.
+- Confirmed bookings cannot be rescheduled through the API. Cancel and create a new request instead; pending requests can be updated by the event host.
 - Do not expose passwords, password hashes, JWT secrets, or database credentials in API responses.
-- For production, add rate limiting, stricter input validation, email verification, secure deployment settings, and tests. Review cancellation policy and ensure your stored procedures/triggers cover all booking concurrency cases.
+- For production, add rate limiting, email verification, and secure deployment settings. The repository includes unit tests; add database-backed integration and browser tests before release. Review cancellation policy and ensure your stored procedures/triggers cover all booking concurrency cases.
 - CORS is restricted to `CLIENT_ORIGIN`; update it for your React app's URL.

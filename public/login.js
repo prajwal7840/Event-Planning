@@ -22,10 +22,21 @@
     const registering = mode === 'register';
     $('#name-wrap').classList.toggle('is-hidden', !registering);
     $('#name-wrap input').required = registering;
+    $('#age-wrap').classList.toggle('is-hidden', !registering);
+    $('#age-wrap input').required = registering;
+    $('#phone-wrap').classList.toggle('is-hidden', !registering);
+    $('#share-phone-wrap').classList.toggle('is-hidden', !registering);
+    $('#city-wrap').classList.toggle('is-hidden', !registering);
     const password = form.elements.password;
     password.autocomplete = registering ? 'new-password' : 'current-password';
-    password.minLength = registering ? 8 : 0;
-    password.pattern = registering ? '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}' : '';
+    // An empty pattern attribute rejects every value, so remove the attributes instead of blanking them.
+    if (registering) {
+      password.minLength = 8;
+      password.pattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}';
+    } else {
+      password.removeAttribute('minlength');
+      password.removeAttribute('pattern');
+    }
     $('#password-hint').classList.toggle('is-hidden', !registering);
     $('#form-title').textContent = registering ? 'Let’s get acquainted.' : 'Welcome back.';
     $('#form-intro').textContent = registering ? 'Create one account, then switch between Gather roles whenever you need.' : 'Choose how you would like to use Gather today.';

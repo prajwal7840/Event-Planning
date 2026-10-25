@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Load testing · Gather</title>
+  <link rel="stylesheet" href="/console.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <a class="brand" href="/" aria-label="Gather load testing"><span class="mark">g</span><span>ather<span class="dot">.</span></span></a>
+      <div class="side-label">Performance lab</div>
+      <nav id="nav" aria-label="Sections">
+        <button data-tab="new" class="active">New test</button>
+        <button data-tab="live">Live run <span id="live-dot" class="pulse hidden"></span></button>
+        <button data-tab="history">Reports &amp; history</button>
+        <button data-tab="compare">Compare runs</button>
+      </nav>
+      <div class="side-foot" id="engine-note">Checking engine…</div>
+    </aside>
+    <main class="main">
+      <div id="gate" class="gate hidden">
+        <h1>Access token</h1>
+        <p>This console starts load. Paste the token printed when the console started (also in <code>loadtest/.console-token</code>).</p>
+        <form id="gate-form"><input id="gate-token" type="password" autocomplete="off" placeholder="Access token" required><button class="btn primary" type="submit">Unlock</button></form>
+        <p id="gate-error" class="error"></p>
+      </div>
+      <div id="app" class="hidden">
+        <section id="tab-new" class="tab"></section>
+        <section id="tab-live" class="tab hidden"></section>
+        <section id="tab-history" class="tab hidden"></section>
+        <section id="tab-compare" class="tab hidden"></section>
+      </div>
+    </main>
+  </div>
+  <div id="viewer" class="viewer hidden" role="dialog" aria-label="Report"><div class="viewer-bar"><strong id="viewer-title">Report</strong><button class="btn" id="viewer-close">Close</button></div><iframe id="viewer-frame" title="Report"></iframe></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/charts.js"></script>
+  <script src="/console.js"></script>
+</body>
+</html>
