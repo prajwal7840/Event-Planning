@@ -1,3 +1,6 @@
 node_modules/
 .env
 npm-debug.log*
+loadtest/tools/k6/
+loadtest/data/
+loadtest/.console-token

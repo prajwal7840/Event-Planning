@@ -1,0 +1,26 @@
+{
+  "smoke": {
+    "label": "Smoke (about 1 minute)",
+    "description": "Quick safety check that the whole system works. Run this before anything larger.",
+    "config": { "name": "Smoke test", "durationSeconds": 60, "maxVus": 10, "warmupSeconds": 5, "warmupVus": 2, "rampUpSeconds": 15, "rampDownSeconds": 10,
+      "thinkTime": { "minMs": 300, "maxMs": 1200 }, "data": { "hosts": 6, "vendors": 3, "invitees": 8, "eventsPerHost": 2 } }
+  },
+  "load": {
+    "label": "Load (5 minutes, 100 users)",
+    "description": "Typical expected peak.",
+    "config": { "name": "Load test", "durationSeconds": 300, "maxVus": 100, "warmupSeconds": 20, "warmupVus": 5, "rampUpSeconds": 60, "rampDownSeconds": 30,
+      "data": { "hosts": 50, "vendors": 20, "invitees": 40, "eventsPerHost": 3 } }
+  },
+  "stress": {
+    "label": "Stress (15 minutes, 300 users)",
+    "description": "Push past the expected peak to find where latency or errors start to climb.",
+    "config": { "name": "Stress test", "durationSeconds": 900, "maxVus": 300, "warmupSeconds": 30, "warmupVus": 10, "rampUpSeconds": 300, "rampDownSeconds": 60,
+      "data": { "hosts": 150, "vendors": 60, "invitees": 120, "eventsPerHost": 3 } }
+  },
+  "soak": {
+    "label": "Soak (30 minutes, 100 users)",
+    "description": "Hold a moderate load for a long time to look for slow degradation.",
+    "config": { "name": "Soak test", "durationSeconds": 1800, "maxVus": 100, "warmupSeconds": 30, "warmupVus": 5, "rampUpSeconds": 120, "rampDownSeconds": 60,
+      "data": { "hosts": 50, "vendors": 20, "invitees": 40, "eventsPerHost": 3 } }
+  }
+}
