@@ -10,6 +10,9 @@ const bookingRoutes = require("./src/routes/bookings.routes");
 const invitationRoutes = require("./src/routes/invitations.routes");
 const budgetRoutes = require("./src/routes/budget.routes");
 const notificationRoutes = require("./src/routes/notifications.routes");
+const availabilityRoutes = require("./src/routes/availability.routes");
+const expenseRoutes = require("./src/routes/expenses.routes");
+const { startReminderScheduler } = require("./src/services/reminder.service");
 const { notFound, errorHandler } = require("./src/middleware/errors");
 
 const app = express();
@@ -56,9 +59,14 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api", invitationRoutes);
 app.use("/api", budgetRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/availability", availabilityRoutes);
+app.use("/api", expenseRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
 const port = Number(process.env.PORT || 5000);
-app.listen(port, () => console.log(`Event Planning API listening on port ${port}`));
+app.listen(port, () => {
+  console.log(`Event Planning API listening on port ${port}`);
+  startReminderScheduler();
+});

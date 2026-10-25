@@ -5,7 +5,7 @@ class Entity {
 }
 
 class User extends Entity {
-  static fields = ['user_id', 'name', 'email', 'password_hash', 'role'];
+  static fields = ['user_id', 'name', 'email', 'password_hash', 'role', 'age', 'phone', 'city', 'share_phone_with_invitees'];
   toJSON() { const { password_hash, ...safe } = this; return safe; }
 }
 class VendorProfile extends Entity { static fields = ['vendor_id', 'business_name', 'description', 'business_location']; }
@@ -20,7 +20,7 @@ class Event extends Entity {
   }
 }
 class Invitation extends Entity {
-  static fields = ['invitation_id', 'event_id', 'invitee_user_id', 'invitee_name', 'invitee_email', 'rsvp_status', 'sent_at', 'responded_at'];
+  static fields = ['invitation_id', 'event_id', 'invitee_user_id', 'invitee_name', 'invitee_email', 'rsvp_status', 'sent_at', 'responded_at', 'delivery_status', 'delivery_error'];
   static validateRsvp(status) { return ['ACCEPTED', 'DECLINED'].includes(status) ? null : 'rsvp_status must be ACCEPTED or DECLINED'; }
 }
 class Venue extends Entity {
@@ -36,6 +36,9 @@ class VendorOffering extends Entity {
   static validate(data) {
     if (!data.category || !data.name || !['SERVICE', 'PRODUCT', 'PACKAGE'].includes(data.offering_type)) return 'category, name and valid offering_type are required';
     if (data.price != null && (!Number.isFinite(Number(data.price)) || Number(data.price) < 0)) return 'price must be non-negative';
+    if (data.min_capacity != null && (!Number.isInteger(Number(data.min_capacity)) || Number(data.min_capacity) < 1)) return 'min_capacity must be a positive integer';
+    if (data.max_capacity != null && (!Number.isInteger(Number(data.max_capacity)) || Number(data.max_capacity) < 1)) return 'max_capacity must be a positive integer';
+    if (data.min_capacity != null && data.max_capacity != null && Number(data.min_capacity) > Number(data.max_capacity)) return 'min_capacity cannot exceed max_capacity';
     return null;
   }
 }

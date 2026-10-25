@@ -7,6 +7,8 @@ router.post('/events/:id/invitations', authenticate, allowRoles('HOST'), asyncHa
   const invitations = await invitationService.createForEvent(req.user.user_id, req.params.id, req.body.invitees);
   res.status(201).json({ message: 'Invitations saved', invitations });
 }));
+router.get('/events/:id/invitations', authenticate, allowRoles('HOST'), asyncHandler(async (req, res) =>
+  res.json(await invitationService.listForEvent(req.user.user_id, req.params.id))));
 router.get('/invitations/mine', authenticate, allowRoles('INVITEE'), asyncHandler(async (req, res) => res.json(await invitationService.listMine(req.user))));
 router.patch('/invitations/:id/rsvp', authenticate, allowRoles('INVITEE'), asyncHandler(async (req, res) => {
   const { rsvp_status } = req.body;

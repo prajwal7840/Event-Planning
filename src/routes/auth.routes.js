@@ -18,4 +18,7 @@ router.patch('/role', authenticate, asyncHandler(async (req, res) => {
   res.json({ message: 'Workspace changed', user });
 }));
 
+router.get('/profile', authenticate, asyncHandler(async (req, res) => res.json(await authService.getProfile(req.user.user_id))));
+router.patch('/profile', authenticate, asyncHandler(async (req, res) => res.json(await authService.updateProfile(req.user.user_id, req.body))));
+
 module.exports = router;

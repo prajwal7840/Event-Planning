@@ -93,6 +93,32 @@ paths:
         '200': { description: Active workspace role changed }
         '400': { $ref: '#/components/responses/Error' }
         '401': { $ref: '#/components/responses/Error' }
+  /api/auth/profile:
+    get:
+      tags: [Authentication]
+      summary: Read the current user's profile
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Profile without password data, content: { application/json: { schema: { type: object } } } }
+        '401': { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Authentication]
+      summary: Update contact details and invitation privacy preference
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone: { type: string, nullable: true, maxLength: 30 }
+                city: { type: string, nullable: true, maxLength: 100 }
+                share_phone_with_invitees: { type: boolean }
+      responses:
+        '200': { description: Updated profile }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
   /api/events:
     get:
       tags: [Events]
@@ -156,6 +182,30 @@ paths:
         '401': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /api/events/{id}/bookings:
+    get:
+      tags: [Events]
+      summary: List selected venues and services for the host or invited guests
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Active pending and confirmed venue/service bookings, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/events/{id}/recommendations:
+    get:
+      tags: [Events]
+      summary: Venues and services matching the event's budget, guest count, date and duration (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Matching venues and offerings with budget_share, plus a message when nothing matches, content: { application/json: { schema: { type: object } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
   /api/venues:
     get:
       tags: [Marketplace]
@@ -179,6 +229,19 @@ paths:
           description: Match part of a venue address.
           schema: { type: string }
           example: Amravati
+        - name: attendees
+          in: query
+          required: false
+          schema: { type: integer, minimum: 1 }
+        - name: start_datetime
+          in: query
+          required: false
+          description: Require an available slot covering this start and end range.
+          schema: { type: string, format: date-time }
+        - name: end_datetime
+          in: query
+          required: false
+          schema: { type: string, format: date-time }
       responses:
         '200': { description: Matching venues, content: { application/json: { schema: { type: array, items: { type: object } } } } }
     post:
@@ -195,7 +258,82 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '401': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
+  /api/venues/{id}:
+    patch:
+      tags: [Marketplace]
+      summary: Update an owned venue
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/VenueRequest' }
+      responses:
+        '200': { description: Venue updated }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Marketplace]
+      summary: Delete an owned venue without booking history
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Venue deleted }
+        '409': { $ref: '#/components/responses/Error' }
+  /api/availability:
+    get:
+      tags: [Marketplace]
+      summary: List current vendor availability slots
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Owned time slots }
+    post:
+      tags: [Marketplace]
+      summary: Add an available or blocked time slot
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [start_datetime, end_datetime, availability_status]
+              properties:
+                venue_id: { type: integer, format: int64 }
+                offering_id: { type: integer, format: int64 }
+                start_datetime: { type: string, format: date-time }
+                end_datetime: { type: string, format: date-time }
+                availability_status: { type: string, enum: [AVAILABLE, BLOCKED] }
+      responses:
+        '201': { description: Availability slot created }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /api/availability/{id}:
+    patch:
+      tags: [Marketplace]
+      summary: Update an owned availability slot
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Availability updated }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Marketplace]
+      summary: Remove an owned availability slot
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Availability removed }
+        '404': { $ref: '#/components/responses/Error' }
   /api/vendors/profile:
+    get:
+      tags: [Marketplace]
+      summary: Read own vendor profile, venues, and offerings
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Vendor workspace data }
+        '403': { $ref: '#/components/responses/Error' }
     post:
       tags: [Marketplace]
       summary: Create or update the signed-in vendor's business profile
@@ -239,6 +377,14 @@ paths:
           description: Only show offerings at or below this price.
           schema: { type: number, minimum: 0 }
           example: 30000
+        - name: start_datetime
+          in: query
+          required: false
+          schema: { type: string, format: date-time }
+        - name: end_datetime
+          in: query
+          required: false
+          schema: { type: string, format: date-time }
       responses:
         '200': { description: Matching offerings, content: { application/json: { schema: { type: array, items: { type: object } } } } }
     post:
@@ -255,11 +401,40 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '401': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
+  /api/offerings/{id}:
+    patch:
+      tags: [Marketplace]
+      summary: Update an owned offering
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OfferingRequest' }
+      responses:
+        '200': { description: Offering updated }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Marketplace]
+      summary: Deactivate an owned offering
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Offering deactivated }
+        '404': { $ref: '#/components/responses/Error' }
   /api/bookings:
     get:
       tags: [Bookings]
       summary: List bookings for the current host or vendor
       security: [{ bearerAuth: [] }]
+      parameters:
+        - name: when
+          in: query
+          required: false
+          description: Only upcoming or only past bookings (by booking end time).
+          schema: { type: string, enum: [upcoming, past] }
       responses:
         '200': { description: Booking list, content: { application/json: { schema: { type: array, items: { type: object } } } } }
         '401': { $ref: '#/components/responses/Error' }
@@ -278,10 +453,32 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '401': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
+  /api/bookings/{id}:
+    patch:
+      tags: [Bookings]
+      summary: Modify a pending booking request (host only)
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_datetime: { type: string, format: date-time }
+                end_datetime: { type: string, format: date-time }
+                agreed_price: { type: number, minimum: 0, nullable: true }
+      responses:
+        '200': { description: Booking request updated }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
   /api/bookings/{id}/confirm:
     patch:
       tags: [Bookings]
-      summary: Confirm a pending booking (host only)
+      summary: Confirm a pending booking (event host or owning vendor)
       security: [{ bearerAuth: [] }]
       parameters:
         - $ref: '#/components/parameters/id'
@@ -331,7 +528,65 @@ paths:
         '401': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /api/events/{id}/expenses:
+    get:
+      tags: [Budget]
+      summary: List expenses for an owned event
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Event expenses, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Budget]
+      summary: Record an event expense
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description, amount]
+              properties:
+                description: { type: string, maxLength: 255 }
+                amount: { type: number, minimum: 0 }
+                expense_date: { type: string, format: date, nullable: true }
+                booking_id: { type: integer, format: int64, nullable: true }
+      responses:
+        '201': { description: Expense recorded }
+        '400': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /api/expenses/{id}:
+    patch:
+      tags: [Budget]
+      summary: Update an expense belonging to the current host
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Expense updated }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Budget]
+      summary: Delete an expense belonging to the current host
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/id' }]
+      responses:
+        '200': { description: Expense removed }
+        '404': { $ref: '#/components/responses/Error' }
   /api/events/{id}/invitations:
+    get:
+      tags: [Invitations]
+      summary: View guest RSVP statuses for an event (host only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Guest list with RSVP status, content: { application/json: { schema: { type: array, items: { type: object } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
     post:
       tags: [Invitations]
       summary: Invite people to an event (host only)
@@ -443,12 +698,15 @@ components:
         role: { type: string, enum: [HOST, VENDOR, INVITEE] }
     RegisterRequest:
       type: object
-      required: [name, email, password, role]
+      required: [name, email, password, role, age]
       example:
         name: Test Host
         email: host@example.com
         password: StrongPass123!
         role: HOST
+        age: 25
+        phone: '+1 555 123 4567'
+        city: Amravati
       properties:
         name: { type: string, example: Test Host }
         email: { type: string, format: email, example: host@example.com }
@@ -459,6 +717,9 @@ components:
           pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$'
           description: Must contain at least 8 characters, including an uppercase letter, lowercase letter, number, and special character.
         role: { type: string, enum: [HOST, VENDOR, INVITEE] }
+        age: { type: integer, minimum: 1, maximum: 120, example: 25 }
+        phone: { type: string, maxLength: 30, example: '+1 555 123 4567' }
+        city: { type: string, maxLength: 100, example: Amravati }
     LoginRequest:
       type: object
       required: [email, password]
