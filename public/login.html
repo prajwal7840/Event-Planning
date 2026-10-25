@@ -31,6 +31,10 @@
         <div class="form-tabs"><button type="button" class="form-tab selected" data-mode="login">Sign in</button><button type="button" class="form-tab" data-mode="register">Create account</button></div>
         <form id="account-form">
           <label id="name-wrap" class="is-hidden">Your name<input name="name" autocomplete="name" placeholder="Alex Morgan"></label>
+          <label id="age-wrap" class="is-hidden">Your age<input name="age" type="number" inputmode="numeric" min="1" max="120" placeholder="25"><small>This helps us understand the Gather community.</small></label>
+          <label id="phone-wrap" class="is-hidden">Phone number (optional)<input name="phone" type="tel" autocomplete="tel" placeholder="+1 555 123 4567"></label>
+          <label id="share-phone-wrap" class="is-hidden"><span style="display:flex;align-items:center;gap:9px"><input name="share_phone_with_invitees" type="checkbox" value="true" style="width:16px;min-height:16px;margin:0;accent-color:#14362a"> Share this phone number with people invited to my events</span></label>
+          <label id="city-wrap" class="is-hidden">City (optional)<input name="city" autocomplete="address-level2" placeholder="Your city"></label>
           <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
           <label>Password<input name="password" type="password" autocomplete="current-password" placeholder="Your password" required><small id="password-hint" class="is-hidden">At least 8 characters with uppercase, lowercase, a number, and a special character.</small></label>
           <button class="submit-button" id="submit-button" type="submit">Sign in <span aria-hidden="true">&rarr;</span></button>
